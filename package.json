@@ -1,0 +1,17 @@
+{
+  "name": "reddit-njs-test-bot",
+  "version": "1.0.0",
+  "description": "test bot for reddit with node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dominic Gan",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "dotenv": "~5.0.1",
+    "prettyjson": "~1.2.1",
+    "snoostorm": "0.0.5",
+    "snoowrap": "~1.15.2"
+  }
+}
