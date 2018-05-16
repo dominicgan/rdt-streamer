@@ -46,11 +46,11 @@ const comments = client.CommentStream(streamOpts);
 
 let printFilteredData = function(comment) {
 	let fData= {
-		subreddit_name: comment.subreddit_name_prefixed,
-		link_title: comment.link_title,
-		body: comment.body,
-		comment_author: comment.author.name,
-		permalink: 'https://www.reddit.com'+comment.permalink
+		sub: '/'+comment.subreddit_name_prefixed,
+		post: comment.link_title,
+		comment: comment.body,
+		user: '/u/'+comment.author.name,
+		url: 'https://www.reddit.com'+comment.permalink
 	};
 
 	console.log(
