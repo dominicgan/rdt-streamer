@@ -1,9 +1,12 @@
 require('dotenv').config();
 
+const minimist = require('minimist');
 const client = require('./snoo.js');
 const prettyjson = require('prettyjson');
 
-const subreddit = 'singapore';
+let argv = minimist(process.argv);
+const subreddit = argv.sub ? argv.sub :'all';
+console.log('watching subreddit: '+subreddit);
 
 // Configure options for stream: subreddit & results per query
 const streamOpts = {
