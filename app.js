@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const minimist = require('minimist');
+const boxen = require('boxen');
 const client = require('./snoo.js');
 const prettyjson = require('prettyjson');
 
@@ -34,7 +35,11 @@ let filteredData = function(comment) {
 // On comment, perform whatever logic you want to do
 comments.on('comment', (comment) => {
 	var fData = filteredData(comment);
-	console.log(prettyjson.render(fData, prettyJsonOpts));
-	console.log('\n');
+	console.log(
+		boxen(
+			prettyjson.render(fData, prettyJsonOpts),
+			{padding: 1}
+		)
+	);
 	// console.log(typeof comment);
 });
