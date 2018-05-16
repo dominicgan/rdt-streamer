@@ -5,15 +5,37 @@ const boxen = require('boxen');
 const client = require('./snoo.js');
 const prettyjson = require('prettyjson');
 
-let argv = minimist(process.argv);
-const subreddit = argv.sub ? argv.sub :'all';
-console.log('watching subreddit: '+subreddit);
-
 // Configure options for stream: subreddit & results per query
 const streamOpts = {
-	subreddit: subreddit,
+	subreddit: 'all',
 	results: 25
 };
+
+const argv = minimist(process.argv);
+const subreddit = argv.sub ? argv.sub :'all';
+const posturl = argv.url;
+
+let postid;
+let postsub;
+
+// parse post url
+if (posturl) {
+	// get the post id from url (../comments/POST_ID/post-title...)
+	postid = posturl.split('/comments/')[1].split('/')[0];
+	// get the post subreddit from url (...eddit.com/r/SUBREDDIT/...)
+	postsub = posturl.split('reddit.com/r/')[1].split('/')[0];
+	streamOpts.subreddit = postsub;
+
+	console.log(postsub, postid);
+} else {
+	if (argv.sub) {
+		streamOpts.subreddit = argv.sub;
+	}
+}
+
+
+
+console.log('watching subreddit: '+streamOpts.subreddit);
 
 const prettyJsonOpts = {
 	noColor: false
@@ -22,24 +44,37 @@ const prettyJsonOpts = {
 // Create a Snoostorm CommentStream with the specified options
 const comments = client.CommentStream(streamOpts);
 
-let filteredData = function(comment) {
-	return {
+let printFilteredData = function(comment) {
+	let fData= {
 		subreddit_name: comment.subreddit_name_prefixed,
 		link_title: comment.link_title,
 		body: comment.body,
 		comment_author: comment.author.name,
 		permalink: 'https://www.reddit.com'+comment.permalink
 	};
-}
 
-// On comment, perform whatever logic you want to do
-comments.on('comment', (comment) => {
-	var fData = filteredData(comment);
 	console.log(
 		boxen(
 			prettyjson.render(fData, prettyJsonOpts),
 			{padding: 1}
 		)
 	);
+
+	return true;
+
+}
+
+// On comment, perform whatever logic you want to do
+comments.on('comment', (comment) => {
+	// console.log('https://www.reddit.com' + comment.permalink);
+	if (posturl) {
+		if (comment.link_id.split('t3_')[1] === postid) {
+			// print only comments from post
+			printFilteredData(comment);
+		}
+	} else {
+		// print all comments
+		printFilteredData(comment);
+	}
 	// console.log(typeof comment);
 });
