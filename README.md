@@ -1,6 +1,8 @@
 # rdt-streamer
 A rudimentary node.js app to stream reddit comments in the cli.
 
+![screengrab](https://raw.githubusercontent.com/dominicgan/rdt-streamer/master/readme/screengrab.png)
+
 ## Getting started
 
 1. Clone repository
